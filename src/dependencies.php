@@ -1,5 +1,6 @@
 <?php
 // DIC configuration
+use \Psr\Container\ContainerInterface as ContainerInterface;
 
 $container = $app->getContainer();
 
@@ -17,3 +18,13 @@ $container['logger'] = function ($c) {
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
     return $logger;
 };
+
+$container['dbConnection'] = function () {
+    $db = new PDO('mysql:host=192.168.20.20;dbname=Todo', 'root');
+    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    return $db;
+};
+
+$container['GetAllTodosControllerFactory'] = new classes\factories\GetAllTodosControllerFactory();
+
+$container['todoModelFactory'] = new classes\factories\todoModelFactory();
